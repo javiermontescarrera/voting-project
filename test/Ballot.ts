@@ -61,21 +61,30 @@ describe("Ballot", async () => {
     it("gives right to vote for another address", async () => {
       const {signers, ballotContract} = await loadFixture(deployContract);
       const voter1 = signers[1].address;
+      const voter1Before = await ballotContract.voters(voter1);
+      expect (voter1Before.weight).to.eq(0);
       await ballotContract.giveRightToVote(voter1);
       const voter1After = await ballotContract.voters(voter1);
       expect (voter1After.weight).to.eq(1);
     });
 
     it("can not give right to vote for someone that has voted", async () => {
-      // TODO
-      throw Error("Not implemented");
+      const {signers, ballotContract} = await loadFixture(deployContract);
+      const voter1 = signers[1].address;
+      await ballotContract.giveRightToVote(voter1);
+      const voter1After = await ballotContract.voters(voter1);
+      expect (voter1After.weight).to.eq(1);
+      await ballotContract.connect(signers[1]).vote(1);
+      await expect(ballotContract.giveRightToVote(voter1)).to.be.reverted;
     });
+
     it("can not give right to vote for someone that has already voting rights", async () => {
       // TODO
       const {signers, ballotContract} = await loadFixture(deployContract);
       const voter1 = signers[1].address;
       await ballotContract.giveRightToVote(voter1);
       const voter1After = await ballotContract.voters(voter1);
+      expect (voter1After.weight).to.eq(1);
       await expect(ballotContract.giveRightToVote(voter1)).to.be.reverted;
     });
   });
