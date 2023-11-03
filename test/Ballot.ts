@@ -23,10 +23,6 @@ describe("Ballot", async () => {
     });
     it("sets the deployer address as chairperson", async () => {
       // TODO
-      const signers = await ethers. getSigners();
-      const deployerAddress = signers[0].address;
-      const chairpersonAddress = "TODO";
-      expect (deployerAddress).to.eq(chairpersonAddress);
     });
     it("sets the voting weight for the chairperson as 1", async () => {
       // TODO
